@@ -1,95 +1,185 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <meta charset="UTF-8">
-    <title>Investment WebApp</title>
-    <style>
-        body {
-            font-family: Arial;
-            background: #f4f6f9;
-            text-align: center;
-            padding: 30px;
-        }
-        .box {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            width: 350px;
-            margin: auto;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        input, select, button {
-            margin: 10px;
-            padding: 10px;
-            width: 80%;
-        }
-        button {
-            background: #007bff;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-        button:hover {
-            background: #0056b3;
-        }
-        #result {
-            margin-top: 20px;
-            font-weight: bold;
-        }
-    </style>
+<meta charset="UTF-8">
+<title>💰 Investment WebApp</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #4facfe, #00f2fe);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+.container {
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+    width: 360px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    text-align: center;
+}
+h2 { margin-bottom: 15px; }
+
+input, select {
+    width: 90%;
+    padding: 10px;
+    margin: 8px 0;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+button {
+    padding: 10px;
+    margin: 5px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    color: white;
+    transition: 0.3s;
+}
+
+.btn-main { background: #007bff; }
+.btn-reset { background: #6c757d; }
+.btn-random { background: #28a745; }
+
+button:hover {
+    opacity: 0.8;
+    transform: scale(1.05);
+}
+
+#result {
+    margin-top: 15px;
+    padding: 15px;
+    border-radius: 10px;
+    display: none;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+.success { background: #e6f7ff; }
+.error { background: #ffe6e6; }
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.progress {
+    height: 8px;
+    background: #ddd;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+.progress-bar {
+    height: 8px;
+    background: #007bff;
+    width: 0%;
+    border-radius: 5px;
+    transition: 0.3s;
+}
+</style>
 </head>
 
 <body>
 
-<div class="box">
+<div class="container">
     <h2>💰 Investment-Berater</h2>
 
-    <input type="number" id="amount" placeholder="Betrag in €">
+    <input type="number" id="amount" placeholder="💶 Betrag in €">
 
     <select id="risk">
-        <option value="">Risiko wählen</option>
+        <option value="">⚖️ Risiko wählen</option>
         <option value="low">Niedrig</option>
         <option value="medium">Mittel</option>
         <option value="high">Hoch</option>
     </select>
 
     <select id="duration">
-        <option value="">Anlagehorizont</option>
+        <option value="">⏳ Anlagehorizont</option>
         <option value="short">Kurzfristig</option>
         <option value="medium">Mittelfristig</option>
         <option value="long">Langfristig</option>
     </select>
 
-    <button onclick="getRecommendation()">Empfehlung anzeigen</button>
+    <select id="goal">
+        <option value="">🎯 Ziel</option>
+        <option value="security">Sicherheit</option>
+        <option value="growth">Wachstum</option>
+        <option value="fast">Schnelles Geld</option>
+    </select>
+
+    <br>
+    <button class="btn-main" onclick="recommend()">Empfehlung anzeigen</button>
+    <button class="btn-reset" onclick="resetForm()">Zurücksetzen</button>
+    <button class="btn-random" onclick="randomStrategy()">🎲 Zufällig</button>
+
+    <div class="progress"><div class="progress-bar" id="progress"></div></div>
 
     <div id="result"></div>
 </div>
 
 <script>
-function getRecommendation() {
+function recommend() {
     let risk = document.getElementById("risk").value;
     let duration = document.getElementById("duration").value;
-    let result = "";
+    let goal = document.getElementById("goal").value;
+    let resultBox = document.getElementById("result");
+    let progress = document.getElementById("progress");
+
+    if (!risk || !duration || !goal) {
+        resultBox.style.display = "block";
+        resultBox.className = "error";
+        resultBox.innerHTML = "⚠️ Bitte alle Felder ausfüllen!";
+        progress.style.width = "20%";
+        return;
+    }
+
+    let text = "";
+    let emoji = "";
 
     if (risk === "low") {
-        result = "👉 Empfehlung: Tagesgeld oder Staatsanleihen (sehr sicher)";
-    } 
-    else if (risk === "medium") {
-        result = "👉 Empfehlung: ETFs (z. B. MSCI World)";
-    } 
-    else if (risk === "high") {
-        result = "👉 Empfehlung: Einzelaktien oder Kryptowährungen";
+        text = "Tagesgeld oder Anleihen";
+        emoji = "🛡️";
+        progress.style.width = "40%";
+    } else if (risk === "medium") {
+        text = "ETFs (z. B. MSCI World)";
+        emoji = "📊";
+        progress.style.width = "70%";
+    } else {
+        text = "Aktien oder Kryptowährungen";
+        emoji = "🚀";
+        progress.style.width = "100%";
     }
 
-    if (duration === "long") {
-        result += "<br>📈 Langfristig sind höhere Renditen möglich.";
-    }
+    let reason = "Diese Strategie passt zu deinem Risiko und Ziel.";
 
-    if (result === "") {
-        result = "⚠️ Bitte alle Felder ausfüllen!";
-    }
+    resultBox.style.display = "block";
+    resultBox.className = "success";
+    resultBox.innerHTML = emoji + " Empfehlung: <b>" + text + "</b><br>" + reason;
+}
 
-    document.getElementById("result").innerHTML = result;
+function resetForm() {
+    document.getElementById("amount").value = "";
+    document.getElementById("risk").value = "";
+    document.getElementById("duration").value = "";
+    document.getElementById("goal").value = "";
+    document.getElementById("result").style.display = "none";
+    document.getElementById("progress").style.width = "0%";
+}
+
+function randomStrategy() {
+    let risks = ["low", "medium", "high"];
+    let durations = ["short", "medium", "long"];
+    let goals = ["security", "growth", "fast"];
+
+    document.getElementById("risk").value = risks[Math.floor(Math.random()*3)];
+    document.getElementById("duration").value = durations[Math.floor(Math.random()*3)];
+    document.getElementById("goal").value = goals[Math.floor(Math.random()*3)];
+
+    recommend();
 }
 </script>
 
