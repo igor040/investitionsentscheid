@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Investment WebApp</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: #f4f6f9;
+            text-align: center;
+            padding: 30px;
+        }
+        .box {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            width: 350px;
+            margin: auto;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        input, select, button {
+            margin: 10px;
+            padding: 10px;
+            width: 80%;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        #result {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="box">
+    <h2>💰 Investment-Berater</h2>
+
+    <input type="number" id="amount" placeholder="Betrag in €">
+
+    <select id="risk">
+        <option value="">Risiko wählen</option>
+        <option value="low">Niedrig</option>
+        <option value="medium">Mittel</option>
+        <option value="high">Hoch</option>
+    </select>
+
+    <select id="duration">
+        <option value="">Anlagehorizont</option>
+        <option value="short">Kurzfristig</option>
+        <option value="medium">Mittelfristig</option>
+        <option value="long">Langfristig</option>
+    </select>
+
+    <button onclick="getRecommendation()">Empfehlung anzeigen</button>
+
+    <div id="result"></div>
+</div>
+
+<script>
+function getRecommendation() {
+    let risk = document.getElementById("risk").value;
+    let duration = document.getElementById("duration").value;
+    let result = "";
+
+    if (risk === "low") {
+        result = "👉 Empfehlung: Tagesgeld oder Staatsanleihen (sehr sicher)";
+    } 
+    else if (risk === "medium") {
+        result = "👉 Empfehlung: ETFs (z. B. MSCI World)";
+    } 
+    else if (risk === "high") {
+        result = "👉 Empfehlung: Einzelaktien oder Kryptowährungen";
+    }
+
+    if (duration === "long") {
+        result += "<br>📈 Langfristig sind höhere Renditen möglich.";
+    }
+
+    if (result === "") {
+        result = "⚠️ Bitte alle Felder ausfüllen!";
+    }
+
+    document.getElementById("result").innerHTML = result;
+}
+</script>
+
+</body>
+</html>
